@@ -114,5 +114,9 @@ sa_4 <- sa_3 +
                     ymin = -30, ymax = -24)
 sa_4
 
-
+# [A.A]
+# Neat script
+# JUst seemed copied from the document
+# Lack of comments??
+# What did you learn??
         
