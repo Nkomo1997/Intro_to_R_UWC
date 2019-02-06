@@ -54,7 +54,7 @@ plot_2 <- ggplot(temp_2, aes(x = blade_length, y= blade_weight, colour=site)) +
 
 ggarrange(plot_1, plot_1) # combing the two graphs together into a single plot
           
- #PART 4
+#PART 4
 
 datasets::ToothGrowth 
 
