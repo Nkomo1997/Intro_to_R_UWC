@@ -12,6 +12,7 @@ load("data/rast_annual.RData")
 load("data/MUR.RData")
 load("data/MUR_low_res.RData")
 
+
 sst <- MUR_low_res #mere low resolution, the better the resolution the better graphs you create. disadvantage is that you haver more input and large data
 
 cols11 <- c("#004dcd", "#0068db", "#007ddb", "#008dcf", "#009bbc",
@@ -45,7 +46,7 @@ ggplot(data = south_africa_coast, aes(x = lon, y = lat)) +
   geom_path(data = sa_provinces, aes(group = group)) +
   coord_equal(xlim = c(15, 34), ylim = c(-36, -26), expand = 0)
 
-ggplot(data = south_africa_coast, aes(x = lon, y = lat)) +
+sa <- ggplot(data = south_africa_coast, aes(x = lon, y = lat)) +
   geom_raster(data = sst, aes(fill = bins)) +
   geom_polygon(colour = "black", fill = "grey70", aes(group = group)) +
   geom_path(data = sa_provinces, aes(group = group)) +
