@@ -1,6 +1,6 @@
 #Thulisile Nkomo
 #01 February 2019
-#Homework Section 1
+#Homework Section 1, 2,3 and 4
 
 
 #Loading  all libraries that i will make use of their functions.
@@ -41,7 +41,11 @@ nrow(rast_aug)
 head(rast_aug,n= 3)
 tail(rast_aug, n =2)
 
-#Display only the season and temperature and this assigned a new name and be imn enviro.
+#dimensions'
+dim(ras_aug)
+dim(ras_feb)
+
+#Display only the season and temperature and this assigned a new name
 #So you assign a new name first
 seas_temp  <- rast_feb %>%
   select(season, temp)
@@ -112,9 +116,7 @@ load("data/sa_provinces.RData")
     geom_raster(data = rast_feb, aes(fill = bins)) +
     scale_fill_manual("Temp. (°C)", values = colPal)
   
-  
-  
-#Adding labels and title on both graphs.
+  #Adding labels and title on both graphs.
   ggplot(data =rast_aug, aes(x = lon,y = lat)) +
     geom_point(colour ="grey") +
     labs(x ="Longitude", y ="Latitude") +
@@ -150,7 +152,8 @@ load("data/sa_provinces.RData")
              angle = 330,
              colour = "springgreen")
     
-  ggplot(data =rast_feb, aes(x = lon,y = lat)) +
+    #FEBRUARY
+     ggplot(data =rast_feb, aes(x = lon,y = lat)) +
     geom_point(colour ="grey") +
     labs(x ="Longitude", y ="Latitude") +
     ggtitle("Aug_Map") +
@@ -159,14 +162,13 @@ load("data/sa_provinces.RData")
     scale_fill_manual("Temp. (°C)", values = colPal) 
     
     
-#Scale Bar
+#Scale Bar 
   scalebar(x.min = 22, x.max = 26, y.min = -36, y.max = -35, # Set location of bar
            dist = 200, height = 1, st.dist = 0.8, st.size = 4, # Set particulars
            dd2km = TRUE, model = "WGS84") + # Set appearance
     north(x.min = 22.5, x.max = 25.5, y.min = -33, y.max = -31, # Set location of symbol
           scale = 1.2, symbol = 16)
   
-#Inserting smaller map inside my map:
   
 # SECTION 2
   
@@ -188,9 +190,10 @@ plot_1 <- ggplot(Eck, aes(x = stipe_length, y = stipe_diameter, colour =site))+
   geom_line(aes(group = site)) + labs(x ="stipe_length", y = "stipe_diameter") + 
   ggtitle("A line graph showing the stipe length and stipe diameter of the species 
           ecklonia at different sites")
-plot_2 <- ggplot(data = Eck, aes(x = "stipe_length")) +
-  bar_graph(aes(fill = site))+
-  labs(x = "stipe length", y= "stipe diameter") 
+plot_2 <- ggplot(data=ecklonia,aes(x= primary_blade_width)) +
+  geom_bar(aes(fill= site), position = "dodge") +
+  labs(x = "Primary blwid", y= "Count") +
+  ggtitle("C")
 
 plot_3 <- ggplot(data = Eck, aes(x = stipe_length, y = stipe_diameter)) +
   geom_boxplot(aes(fill = site))+
@@ -198,9 +201,9 @@ plot_3 <- ggplot(data = Eck, aes(x = stipe_length, y = stipe_diameter)) +
 
 # Make use of the ggarrange function and arrange these three graphs created above into 1 plot
 
-ggarrange(plot_1, plot_3,
-          labels= c (), common, legend = TRUE) +
-  ggtitle("A and B")
+ggarrange(plot_1, plot_2, plotZ_3,
+          ncol = 2, nrow = 2,
+          common.legend = TRUE)
 
 # Calculate the mean,max,min,median and variance for the stipe_length, stipe_diameter for each of the sites
 
@@ -248,7 +251,8 @@ Eck %>%
   summarise(min_sl= min(stipe_length),
             max_sl= max(stipe_length))
 
-# Determine the overall summary of the dataset
+# Checking the overall summary of the dataset
+summary(ecklonia)
 
 # Section 3: 
 # Make use of the SACTN_day1 data:
@@ -257,38 +261,27 @@ SAC <- read_csv("data/SACTN_day_1.csv") # Assigning the dataset a new name
 
 # Here create a graph showing temperature variation between sites
 
-SACTN_temp_mean <- SAC %>% 
-  group_by(site) %>% 
-  summarise (mean_temp = mean(temp, na.rm = TRUE),
-            count = n()
-  )
-ggplot(SACTN_temp_mean, mapping = aes(x = site, y = count)) +
-  geom_point(aes(size = count), alpha = 1/3) +
-  geom_smooth(se = FALSE)+
-  labs(x="site", y=(mean_temp)) + #adding labels
-ggtitle("A") #adding title
+SACTN_tidy <- SACTN %>% #Tidying our dataset
+  separate(col = index, into = c("site", "src"), sep = "/ ") #Using a function separate to separate the index column into site and src
 
-ggplot(data = SACTN_temp_mean, aes(x = site, y = mean_temp)) +
-  geom_point(aes(size = site), alpha = 1/3) +
-  geom_smooth(se = FALSE)+
-  labs(x="depth", y=(mean_temp)) +#adding labels
-  ggtitle("A") #
+rm(SACTN) #First remove/delete the untidy dataset/original dataset.
+
+SACTN_tidier <- SACTN_tidy %>% #Then arrange the columns so that set as follows: site,src,date and temp using the select function
+  select(site, src, date, temp)
+
+ggplot(data = SACTN_tidier,aes(x=date, y= temp)) + # A graph showing temperature variation at all sites
+  geom_line(aes(colour = site, group = paste0(site))) +
+  labs(x = "", y = "Temperature (°C)", colour = "Site") +
+  theme_bw()
 
 # Select all the temperatures recorded at the site Port Nolloth during August or September.
-SAC %>% 
-  filter(site == "Port Nolloth" %in% selected_dates) %>%
-  group_by(temp) 
- 
-#creating a set of sites you want to select.
-selected_dates <- c("1973-08-01", "1973-09-01") 
+PortN <- SACTN_tidier%>% # Assign new name the filter site Port Nolloth
+  filter(site == "Port Nolloth", month(date) == 08 | month(date) == 09)# Then filter by date extracting the 8th and 9th months(august and september)
 
-SAC %>% 
-  filter(site %in% selected_dates) %>% #use %in% when filtering a sites that you concatinated into a set.
-  group_by(temp)
-  summarise(mean_temp = mean(temp, na.rm = TRUE), 
-            sd_temp = sd(temp, na.rm = TRUE))#use summarise function to calculate mean and sd. 
+SACTN_tidier %>%  #Selecting the monthly temperatures recorded in Port Nolloth during the year 1994.
+  filter(site == "Port Nolloth",year(date) == 1994)
 
-  # Work through the tidyverse section within the document. Show what you have done by creating comments/ notes throughout the script
+# Work through the tidyverse section within the document. Show what you have done by creating comments/ notes throughout the script
   
 # Section 4:
 # Make use of any two built in datasets:
@@ -297,7 +290,60 @@ carbon <- datasets::CO2
 air <- datasets::airquality
 
 # Make use of the summarise, select, group_by functions
-# Create at least two visualisations that were not done in the Intro R workshop
+
+carbon %>% 
+  summarise(mean_conc = mean(conc),
+            min_conc = min(conc))
+
+air %>% 
+  summarise(max_temp = mean(temp),
+            min_temp = min(temp))
+
+carbon %>% 
+  select(Treatment.uptake)
+
+air %>% 
+  select(Solar.R,Wind)
+
+#Visualizations not done in the R intro workshop
+
+#Using geom_jitter then adding geom_line to connect he jitter points,then able to read the pattern of the data.
+
+carbon %>% 
+  ggplot(aes(x=Treatment, y=uptake)) +
+  geom_jitter()+
+  geom_line()
+
+#Using the women1 data,geom_bin2d function creates a pattern based on the specified data and then adding geom_smooth makes it easy to read that patten.
+air %>% 
+  ggplot(aes(x= Solar.R, y= Wind))+
+  geom_bin2d()+
+  geom_smooth(method = "lm")
+
+carbon %>% 
+  ggplot(aes(x= Treatment, y= uptake))+
+  geom_bin2d()+
+  geom_smooth(method = "lm")
+
+#using crossbar
+air %>% 
+  ggplot(aes(x= Solar.R, y= Wind))+
+  geom_crossbar(ymin=115, ymax=155)
+carbon %>% 
+  ggplot(aes(x= Treatment, y= uptake))+
+  geom_crossbar(ymin=115, ymax=155)
+
+
+#Using geom_violin
+air %>% 
+  ggplot(aes(x= Solar.R, y= Wind)) +
+  geom_violin()
+carbon %>% 
+  ggplot(aes(x= Treatment, y= uptake)) +
+  geom_violin()
+
+
+
 
 
 
