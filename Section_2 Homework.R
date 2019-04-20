@@ -142,7 +142,7 @@ ecklonia %>%
             min_st_mass =min(frond_length))
 
 # Checking the overall summary of the dataset
-summary(ecklonia)
+summary(ecklonia)  
   
 
 

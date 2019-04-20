@@ -206,23 +206,15 @@ aug4
 load("data/africa_map.RData")
 
 
-#February
+
 feb5 <- feb4+
   annotation_custom(grob = ggplotGrob(africa_map),
                     xmin = 20.9, xmax = 26.9,
                     ymin = -32, ymax = -29)
-feb5
-
-
-#August
 aug5 <- aug4+
   annotation_custom(grob = ggplotGrob(africa_map),
                     xmin = 20.9, xmax = 26.9,
                     ymin = -32, ymax = -29)
-aug5
-
-
-
 
 #Changing the position of the scale bar
 feb6 <- feb5+
@@ -233,10 +225,10 @@ feb6 <- feb5+
                      labels = c("36.0°S", "32.0°S", "28.0°S", "24.0°S"),
                      position = "right") + 
   labs(x = "", y = "") 
-feb6   
+  
 
-#The last step can be repeated for august.
-#Ask Amieroh why temperature doesnt fill the ocean and show variation ?
+
+
 
 
 

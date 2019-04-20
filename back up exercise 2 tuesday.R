@@ -14,7 +14,7 @@ load("data/SACTNmonthly_v4.0.RData") #loading data into global environment
 SACTN <- SACTNmonthly_v4.0 #changing data name to SACTN to make it easy type and access
 rm(SACTNmonthly_v4.0)
 
-temp <- SACTN %>% #changing name from SACTN to temp
+  <- SACTN %>% #changing name from SACTN to temp
   filter(src== "KZNSB") %>% #filtering out the site KZN
   separate(col = date, into =c("year", "month", "day" ), sep = "-") %>% 
   group_by(site, year) #seperating column date into year, month and day. Group it by the site and year
@@ -60,7 +60,7 @@ datasets::ToothGrowth
 
 toothgrowth_1 <-ToothGrowth %>% #assigning a new name to the dataset 
   group_by(supp, dose) %>% 
-  summarise(mean_len = mean(len, na.rm = TRUE), 
+  summarise(mean_len = mean(len, na.rm = TRUE), #calculating mean and standard deviation
             sd_len = sd(len, na.rm = TRUE))
    
 toothgrowth <- ggplot(data = toothgrowth_1, aes(x = dose, y = mean_len, fill = supp)) +
