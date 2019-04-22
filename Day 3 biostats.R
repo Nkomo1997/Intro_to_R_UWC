@@ -29,5 +29,8 @@ summary(eruption.lm)
          subtitle = "Linear regression",
          x = "Waiting time (minutes)",
          y = "Eruption duration (minutes)")
-  
+
+  # Script runs
+  # NO comments on scrits
+  # Seems like its just being copied and paste
   

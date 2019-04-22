@@ -38,3 +38,7 @@ ggplot(data = ecklonia, aes(x = stipe_length, y = frond_length)) +
   geom_label(x = 300, y = 240, label = r_print) +
   labs(x = "Stipe length (cm)", y = "Frond length (cm)") +
   theme_pubclean()
+
+# Once again script runs but no comments
+# Do you understand the script?
+# No infomation present about the script

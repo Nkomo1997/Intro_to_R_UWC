@@ -133,3 +133,10 @@ iris_pearson
 corrplot(iris_pearson, method = "circle")
 
 prop.test(x = 45, n = 100, p = 0.5)
+
+# Runs
+# Very few comments resulting in a loss of marks
+# Where is the heatmmap?
+# Some infomation would be nice to understand what the script is doing
+# Better hypothesis would only benifit and increase your marks
+# Check the interpretations
